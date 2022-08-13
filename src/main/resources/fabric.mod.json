@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "blossom-experience-bottling",
+  "version": "${version}",
+  "name": "BlossomExperienceBottling",
+  "description": "Blossom-series /bottle command and utilities, made during/for ModFest: Singularity",
+  "authors": [
+    "CodedSakura"
+  ],
+  "contact": {
+    "website": "https://blossom.codedsakura.dev",
+    "repo": "https://github.com/BlossomMods/BlossomExperienceBottling"
+  },
+  "license": "MIT",
+  "icon": "assets/blossom-experience-bottling/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.codedsakura.blossom.experience_bottling.BlossomExperienceBottling"
+    ]
+  },
+  "mixins": [
+    "blossom-experience-bottling.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.3",
+    "minecraft": "1.19.x",
+    "blossom-lib": "^${blossomlib_version}"
+  },
+  "suggests": {
+    "fabric-permissions-api-v0": "*"
+  }
+}
