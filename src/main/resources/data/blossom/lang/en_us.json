@@ -1,2 +1,6 @@
 {
+  "blossom.bottling.bottle.description.line-1": "Stored points: %s",
+  "blossom.bottling.bottle.description.line-2": "Your current points: %2$s",
+  "blossom.bottling.bottle.title": "Bottled XP",
+  "blossom.bottling.error.not-enough": "You don't have enough XP!"
 }
