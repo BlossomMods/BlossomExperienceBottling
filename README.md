@@ -22,7 +22,9 @@ This mod's config file can be found at `config/BlossomMods/BlossomExperienceBott
 with the mod at least once.
 
 `langDescriptionLines`: int - how many lines will the Experience Bottle have in its description  
-`itemColors`: [ItemColors](#itemcolors) - colors used for text on the Experience Bottle item
+`itemColors`: [ItemColors](#itemcolors) - colors used for text on the Experience Bottle item  
+`xpDropOnDeathMultiplier`: float - value by which to multiply current XP on death, set to a negative value to use
+vanilla behaviour  
 `bottlingSound`: [Sound](#sound) - the sound played when bottling experience  
 `usageSound`: [Sound](#sound) - the sound played when using bottled experience
 

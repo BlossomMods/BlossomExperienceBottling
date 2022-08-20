@@ -7,6 +7,8 @@ public class BlossomExperienceBottlingConfig {
     int langDescriptionLines = 2;
     ItemColors itemColors = new ItemColors();
 
+    public float xpDropOnDeathMultiplier = .5F;
+
     @Nullable
     Sound bottlingSound = new Sound("minecraft:block.brewing_stand.brew");
     @Nullable
