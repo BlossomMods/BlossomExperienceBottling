@@ -23,11 +23,19 @@ with the mod at least once.
 
 `langDescriptionLines`: int - how many lines will the Experience Bottle have in its description  
 `itemColors`: [ItemColors](#itemcolors) - colors used for text on the Experience Bottle item
+`bottlingSound`: [Sound](#sound) - the sound played when bottling experience  
+`usageSound`: [Sound](#sound) - the sound played when using bottled experience
 
 ### ItemColors
 
-`title`: String - the text color used for the Experience Bottle items title
+`title`: String - the text color used for the Experience Bottle items title  
 `description`: String - the text color used for the Experience Bottle items lore / description
+
+### Sound
+
+`identifier`: String - the identifier of the sound to play (must have namespace, i.e. `minecraft:`)  
+`volume`: float - the volume of the sound (1.0 is normal volume)  
+`pitch`: float - the pitch of the sound (range from 0.0 to 2.0, 1.0 is normal pitch)
 
 ## Commands & their permissions
 

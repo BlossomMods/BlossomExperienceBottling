@@ -12,6 +12,9 @@ import dev.codedsakura.blossom.lib.utils.CustomLogger;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.core.Logger;
 
 import static dev.codedsakura.blossom.experience_bottling.BottledXpUtils.*;
@@ -19,7 +22,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class BlossomExperienceBottling implements ModInitializer {
-    static BlossomExperienceBottlingConfig CONFIG = ConfigManager.register(BlossomExperienceBottlingConfig.class, "BlossomExperienceBottling.json", newConfig -> CONFIG = newConfig);
+    public static BlossomExperienceBottlingConfig CONFIG = ConfigManager.register(BlossomExperienceBottlingConfig.class, "BlossomExperienceBottling.json", newConfig -> CONFIG = newConfig);
     public static final Logger LOGGER = CustomLogger.createLogger("BlossomExperienceBottling");
 
     @Override
@@ -75,6 +78,15 @@ public class BlossomExperienceBottling implements ModInitializer {
         }
 
         player.addExperience(-totalPoints);
+
+        if (CONFIG.bottlingSound != null) {
+            player.playSound(
+                    new SoundEvent(Identifier.tryParse(CONFIG.bottlingSound.identifier)),
+                    SoundCategory.PLAYERS,
+                    CONFIG.bottlingSound.volume,
+                    CONFIG.bottlingSound.pitch
+            );
+        }
     }
 
     private void storePoints(CommandContext<ServerCommandSource> ctx, int points) throws CommandSyntaxException {
