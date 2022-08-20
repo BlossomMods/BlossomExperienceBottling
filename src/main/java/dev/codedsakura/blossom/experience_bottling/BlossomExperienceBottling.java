@@ -10,12 +10,15 @@ import dev.codedsakura.blossom.lib.permissions.Permissions;
 import dev.codedsakura.blossom.lib.text.TextUtils;
 import dev.codedsakura.blossom.lib.utils.CustomLogger;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.core.Logger;
+
+import javax.annotation.Nullable;
 
 import static dev.codedsakura.blossom.experience_bottling.BottledXpUtils.*;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -55,6 +58,18 @@ public class BlossomExperienceBottling implements ModInitializer {
     }
 
 
+    public static void playSound(PlayerEntity player, @Nullable BlossomExperienceBottlingConfig.Sound sound) {
+        if (sound != null) {
+            player.playSound(
+                    new SoundEvent(Identifier.tryParse(sound.identifier)),
+                    SoundCategory.PLAYERS,
+                    sound.volume,
+                    sound.pitch
+            );
+        }
+    }
+
+
     private void storePointsIncremental(CommandContext<ServerCommandSource> ctx, int totalPoints, int increment) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
@@ -78,15 +93,7 @@ public class BlossomExperienceBottling implements ModInitializer {
         }
 
         player.addExperience(-totalPoints);
-
-        if (CONFIG.bottlingSound != null) {
-            player.playSound(
-                    new SoundEvent(Identifier.tryParse(CONFIG.bottlingSound.identifier)),
-                    SoundCategory.PLAYERS,
-                    CONFIG.bottlingSound.volume,
-                    CONFIG.bottlingSound.pitch
-            );
-        }
+        playSound(player, CONFIG.bottlingSound);
     }
 
     private void storePoints(CommandContext<ServerCommandSource> ctx, int points) throws CommandSyntaxException {
