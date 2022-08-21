@@ -14,6 +14,9 @@ public class BlossomExperienceBottlingConfig {
     @Nullable
     public Sound usageSound = new Sound("minecraft:entity.experience_orb.pickup");
 
+    @Nullable
+    Items items;
+
     static class ItemColors {
         String title = "yellow";
         String description = "gray";
@@ -27,5 +30,16 @@ public class BlossomExperienceBottlingConfig {
         public String identifier;
         public float volume = 1;
         public float pitch = 1;
+    }
+
+    static class Items {
+        Item[] requireItems;
+        Item[] consumeItems;
+        Item[] returnItems;
+    }
+
+    static class Item {
+        String identifier;
+        int count = 1;
     }
 }

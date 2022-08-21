@@ -2,5 +2,8 @@
   "blossom.bottling.bottle.description.line-1": "Stored points: %s",
   "blossom.bottling.bottle.description.line-2": "Your current points: %2$s",
   "blossom.bottling.bottle.title": "Bottled XP",
-  "blossom.bottling.error.not-enough": "You don't have enough XP!"
+  "blossom.bottling.error.not-enough": "You don't have enough XP!",
+  "blossom.bottling.error.requirements.1": "You're missing %2$s * [%1$s]",
+  "blossom.bottling.error.requirements.2": "You're missing %2$s * [%1$s] and %4$s * [%3$s]",
+  "blossom.bottling.success": "Bottled %s points!"
 }

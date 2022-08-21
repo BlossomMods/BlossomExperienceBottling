@@ -11,14 +11,23 @@ import dev.codedsakura.blossom.lib.text.TextUtils;
 import dev.codedsakura.blossom.lib.utils.CustomLogger;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
+import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.core.Logger;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static dev.codedsakura.blossom.experience_bottling.BottledXpUtils.*;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -69,6 +78,66 @@ public class BlossomExperienceBottling implements ModInitializer {
         }
     }
 
+    private Map<Item, Integer> getMissingRequiredItems(ServerPlayerEntity player) {
+        if (CONFIG.items == null) {
+            return Map.of();
+        }
+
+        var hasItems = Stream.of(player.getInventory().main, player.getInventory().armor, player.getInventory().offHand)
+                .flatMap(List::stream)
+                .collect(Collectors.groupingBy(ItemStack::getItem))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().asItem(),
+                        entry -> entry.getValue().stream().mapToInt(ItemStack::getCount).sum()
+                ));
+
+        return Stream.of(CONFIG.items.consumeItems, CONFIG.items.requireItems)
+                .flatMap(Arrays::stream)
+                .collect(Collectors.groupingBy(i -> i.identifier))
+                .entrySet()
+                .stream()
+                .map(e -> new Pair<>(
+                        Registry.ITEM.get(Identifier.tryParse(e.getKey())),
+                        e.getValue().stream().mapToInt(i -> i.count).sum()
+                ))
+                .filter(e -> !hasItems.containsKey(e.getLeft()) || hasItems.get(e.getLeft()) < e.getRight())
+                .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
+    }
+
+    private void consumeItems(ServerPlayerEntity player) {
+        if (CONFIG.items == null) {
+            return;
+        }
+
+        Stream.of(CONFIG.items.consumeItems)
+                .collect(Collectors.groupingBy(i -> i.identifier))
+                .forEach((identifier, itemList) -> {
+                    Item item = Registry.ITEM.get(Identifier.tryParse(identifier));
+                    int count = itemList.stream().mapToInt(i -> i.count).sum();
+                    player.getInventory().remove(
+                            itemStack -> itemStack.getItem().equals(item),
+                            count,
+                            player.playerScreenHandler.getCraftingInput()
+                    );
+                });
+    }
+
+    public static void returnItems(PlayerEntity player) {
+        if (CONFIG.items == null) {
+            return;
+        }
+
+        Stream.of(CONFIG.items.returnItems)
+                .collect(Collectors.groupingBy(i -> i.identifier))
+                .forEach((identifier, itemList) -> {
+                    Item item = Registry.ITEM.get(Identifier.tryParse(identifier));
+                    int count = itemList.stream().mapToInt(i -> i.count).sum();
+                    player.getInventory().insertStack(new ItemStack(item, count));
+                });
+    }
+
 
     private void storePointsIncremental(CommandContext<ServerCommandSource> ctx, int totalPoints, int increment) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
@@ -79,9 +148,30 @@ public class BlossomExperienceBottling implements ModInitializer {
             return;
         }
 
+        Map<Item, Integer> missingRequiredItems = getMissingRequiredItems(player);
+        if (!missingRequiredItems.isEmpty()) {
+            LOGGER.info(missingRequiredItems);
+            TextUtils.sendErr(
+                    ctx,
+                    "blossom.bottling.error.requirements." + missingRequiredItems.size(),
+                    missingRequiredItems
+                            .entrySet()
+                            .stream()
+                            .map(e -> new Object[]{
+                                    TextUtils.translation(e.getKey().getTranslationKey()),
+                                    e.getValue()
+                            })
+                            .flatMap(Arrays::stream)
+                            .toList()
+                            .toArray()
+            );
+            return;
+        }
+
         int count = Math.floorDiv(totalPoints, increment);
         int leftover = totalPoints % increment;
 
+        consumeItems(player);
         player.giveItemStack(
                 create(player, increment, count)
         );
@@ -94,6 +184,8 @@ public class BlossomExperienceBottling implements ModInitializer {
 
         player.addExperience(-totalPoints);
         playSound(player, CONFIG.bottlingSound);
+
+        TextUtils.sendSuccess(ctx, "blossom.bottling.success", totalPoints);
     }
 
     private void storePoints(CommandContext<ServerCommandSource> ctx, int points) throws CommandSyntaxException {

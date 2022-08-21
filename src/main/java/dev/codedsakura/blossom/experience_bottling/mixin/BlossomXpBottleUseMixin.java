@@ -33,6 +33,7 @@ public class BlossomXpBottleUseMixin {
             player.addExperience(amount);
 
             itemStack.decrement(1);
+            BlossomExperienceBottling.returnItems(player);
 
             BlossomExperienceBottling.playSound(player, CONFIG.usageSound);
 
