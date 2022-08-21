@@ -152,8 +152,13 @@ public class BlossomExperienceBottling implements ModInitializer {
         ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
         int playerAvailableXp = getPlayerXpAsPoints(player);
-        if (totalPoints > playerAvailableXp) {
+        if (totalPoints == 0 || totalPoints > playerAvailableXp) {
             TextUtils.sendErr(ctx, "blossom.bottling.error.not-enough", totalPoints, playerAvailableXp);
+            return;
+        }
+
+        if (increment == 0) {
+            TextUtils.sendErr(ctx, "blossom.bottling.error.div-by-0");
             return;
         }
 

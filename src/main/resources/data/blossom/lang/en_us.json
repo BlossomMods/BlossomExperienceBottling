@@ -2,7 +2,8 @@
   "blossom.bottling.bottle.description": "Stored points: %s",
   "blossom.bottling.bottle.title": "Bottled XP",
   "blossom.bottling.error.not-enough": "You don't have enough XP!",
-  "blossom.bottling.error.requirements.1": "You're missing %2$s * [%1$s]",
-  "blossom.bottling.error.requirements.2": "You're missing %2$s * [%1$s] and %4$s * [%3$s]",
+  "blossom.bottling.error.requirements.1": "You're missing %2$s * [%1$s]!",
+  "blossom.bottling.error.requirements.2": "You're missing %2$s * [%1$s] and %4$s * [%3$s]!",
+  "blossom.bottling.error.div-by-0": "Error: cannot have increments of 0!\n:tiny_potato: says hi",
   "blossom.bottling.success": "Bottled %s points!"
 }

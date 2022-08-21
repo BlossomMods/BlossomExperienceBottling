@@ -1,3 +1,7 @@
+# 2.2.3
+
+* Fix error when attempting to bottle with 0 xp
+
 # 2.2.2
 
 * Fix in-increments-of not consuming multiple of items
