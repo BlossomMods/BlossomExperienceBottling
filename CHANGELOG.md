@@ -1,3 +1,7 @@
+# 2.2.1
+
+* Fix player being kicked on command usage
+
 # 2.2.0
 
 * Add optional item requirements

@@ -13,10 +13,10 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.s2c.play.PlaySoundIdS2CPacket;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
@@ -68,13 +68,22 @@ public class BlossomExperienceBottling implements ModInitializer {
 
 
     public static void playSound(PlayerEntity player, @Nullable BlossomExperienceBottlingConfig.Sound sound) {
+        if (player.world.isClient) {
+            return;
+        }
+
         if (sound != null) {
-            player.playSound(
-                    new SoundEvent(Identifier.tryParse(sound.identifier)),
-                    SoundCategory.PLAYERS,
-                    sound.volume,
-                    sound.pitch
-            );
+            if (player instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) player).networkHandler
+                        .sendPacket(new PlaySoundIdS2CPacket(
+                                Identifier.tryParse(sound.identifier),
+                                SoundCategory.PLAYERS,
+                                player.getPos(),
+                                sound.volume,
+                                sound.pitch,
+                                player.getWorld().getRandom().nextLong()
+                        ));
+            }
         }
     }
 
