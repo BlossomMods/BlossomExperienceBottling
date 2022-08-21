@@ -4,6 +4,7 @@
   "package": "dev.codedsakura.blossom.experience_bottling.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BlossomXpBottleDispenseMixin",
     "BlossomXpBottleLoreUpdateMixin",
     "BlossomXpBottleUseMixin",
     "PlayerXpDropOverride"

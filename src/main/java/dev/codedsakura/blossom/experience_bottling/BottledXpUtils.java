@@ -77,4 +77,20 @@ public class BottledXpUtils {
     public static ItemStack create(ServerPlayerEntity player, int amount) {
         return create(player, amount, 1);
     }
+
+
+    public static boolean isBottledXp(ItemStack itemStack) {
+        NbtCompound nbt = itemStack.getNbt();
+        return nbt != null && nbt.contains(BottledXpUtils.NBT_KEY);
+    }
+
+    public static int getBottledXpAmount(ItemStack itemStack) {
+        if (!isBottledXp(itemStack)) {
+            return 0;
+        }
+
+        NbtCompound nbt = itemStack.getNbt();
+        assert nbt != null;
+        return nbt.getInt(BottledXpUtils.NBT_KEY);
+    }
 }

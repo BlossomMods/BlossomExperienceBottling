@@ -5,7 +5,6 @@ import dev.codedsakura.blossom.experience_bottling.BottledXpUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ExperienceBottleItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -25,11 +24,9 @@ public class BlossomXpBottleUseMixin {
             return;
         }
 
-
         ItemStack itemStack = player.getStackInHand(hand);
-        NbtCompound nbt = itemStack.getNbt();
-        if (nbt != null && nbt.contains(BottledXpUtils.NBT_KEY)) {
-            int amount = nbt.getInt(BottledXpUtils.NBT_KEY);
+        if (BottledXpUtils.isBottledXp(itemStack)) {
+            int amount = BottledXpUtils.getBottledXpAmount(itemStack);
             player.addExperience(amount);
 
             itemStack.decrement(1);
