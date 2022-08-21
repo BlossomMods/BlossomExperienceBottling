@@ -21,7 +21,6 @@ This mod was made during the [ModFest: Singularity](https://modfest.net/) event.
 This mod's config file can be found at `config/BlossomMods/BlossomExperienceBottling.json`, after running the server
 with the mod at least once.
 
-`langDescriptionLines`: int - how many lines will the Experience Bottle have in its description  
 `itemColors`: [ItemColors](#itemcolors) - colors used for text on the Experience Bottle item  
 `xpDropOnDeathMultiplier`: float - value by which to multiply current XP on death, set to a negative value to use
 vanilla behaviour  
@@ -57,5 +56,5 @@ vanilla behaviour
 only keys with available arguments are shown, for full list, please see
 [`src/main/resources/data/blossom/lang/en_us.json`](src/main/resources/data/blossom/lang/en_us.json)
 
-- `blossom.bottling.bottle.description.line-{n}`: 3 arguments (n is line number >= 1) - stored XP, player XP, sum XP
 - `blossom.bottling.error.not-enough`: 2 arguments - required XP, current XP
+- `blossom.bottling.error.requirements.{n}`: n * 2 arguments - per item of n: (translation key, count)

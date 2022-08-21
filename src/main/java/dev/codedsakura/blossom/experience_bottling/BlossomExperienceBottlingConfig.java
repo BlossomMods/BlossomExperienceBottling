@@ -4,7 +4,6 @@ package dev.codedsakura.blossom.experience_bottling;
 import javax.annotation.Nullable;
 
 public class BlossomExperienceBottlingConfig {
-    int langDescriptionLines = 2;
     ItemColors itemColors = new ItemColors();
 
     public float xpDropOnDeathMultiplier = .5F;

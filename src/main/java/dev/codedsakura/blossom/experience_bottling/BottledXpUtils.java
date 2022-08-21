@@ -7,7 +7,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 
@@ -31,30 +30,21 @@ public class BottledXpUtils {
     }
 
 
-    private static NbtList makeLore(int amount, int current) {
+    private static NbtList makeLore(int amount) {
         NbtList lore = new NbtList();
 
-        for (int i = 1; i <= CONFIG.langDescriptionLines; i++) {
-            lore.add(NbtString.of(Text.Serializer.toJson(
-                    TextUtils.translation("blossom.bottling.bottle.description.line-" + i, amount, current, amount + current)
-                            .styled(style -> style
-                                    .withItalic(false)
-                                    .withColor(TextColor.parse(CONFIG.itemColors.description))))
-            ));
-        }
+        lore.add(NbtString.of(Text.Serializer.toJson(
+                TextUtils.translation("blossom.bottling.bottle.description", amount)
+                        .styled(style -> style
+                                .withItalic(false)
+                                .withColor(TextColor.parse(CONFIG.itemColors.description))))
+        ));
 
         return lore;
     }
 
-    public static void updateNbt(ServerPlayerEntity player, NbtCompound bottleNbt) {
-        int amount = bottleNbt.getInt(NBT_KEY);
 
-        NbtCompound display = bottleNbt.getCompound(ItemStack.DISPLAY_KEY);
-        display.put(ItemStack.LORE_KEY, makeLore(amount, getPlayerXpAsPoints(player)));
-    }
-
-
-    public static ItemStack create(ServerPlayerEntity player, int amount, int bottleCount) {
+    public static ItemStack create(int amount, int bottleCount) {
         NbtCompound display = new NbtCompound();
         display.put(ItemStack.NAME_KEY, NbtString.of(Text.Serializer.toJson(
                 TextUtils.translation("blossom.bottling.bottle.title")
@@ -62,7 +52,7 @@ public class BottledXpUtils {
                                 .withItalic(false)
                                 .withColor(TextColor.parse(CONFIG.itemColors.title)))
         )));
-        display.put(ItemStack.LORE_KEY, makeLore(amount, getPlayerXpAsPoints(player)));
+        display.put(ItemStack.LORE_KEY, makeLore(amount));
 
         NbtCompound bottleData = new NbtCompound();
         bottleData.putLong(NBT_KEY, amount);
@@ -74,8 +64,8 @@ public class BottledXpUtils {
         return bottle;
     }
 
-    public static ItemStack create(ServerPlayerEntity player, int amount) {
-        return create(player, amount, 1);
+    public static ItemStack create(int amount) {
+        return create(amount, 1);
     }
 
 

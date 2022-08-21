@@ -115,7 +115,7 @@ public class BlossomExperienceBottling implements ModInitializer {
                 .collect(Collectors.toMap(Pair::getLeft, Pair::getRight));
     }
 
-    private void consumeItems(ServerPlayerEntity player) {
+    private void consumeItems(ServerPlayerEntity player, int multiplier) {
         if (CONFIG.items == null) {
             return;
         }
@@ -124,7 +124,7 @@ public class BlossomExperienceBottling implements ModInitializer {
                 .collect(Collectors.groupingBy(i -> i.identifier))
                 .forEach((identifier, itemList) -> {
                     Item item = Registry.ITEM.get(Identifier.tryParse(identifier));
-                    int count = itemList.stream().mapToInt(i -> i.count).sum();
+                    int count = itemList.stream().mapToInt(i -> i.count).sum() * multiplier;
                     player.getInventory().remove(
                             itemStack -> itemStack.getItem().equals(item),
                             count,
@@ -180,15 +180,11 @@ public class BlossomExperienceBottling implements ModInitializer {
         int count = Math.floorDiv(totalPoints, increment);
         int leftover = totalPoints % increment;
 
-        consumeItems(player);
-        player.giveItemStack(
-                create(player, increment, count)
-        );
+        consumeItems(player, count + (leftover > 0 ? 1 : 0));
+        player.giveItemStack(create(increment, count));
 
         if (leftover > 0) {
-            player.giveItemStack(
-                    create(player, leftover)
-            );
+            player.giveItemStack(create(leftover));
         }
 
         player.addExperience(-totalPoints);

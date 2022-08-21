@@ -1,3 +1,8 @@
+# 2.2.2
+
+* Fix in-increments-of not consuming multiple of items
+* Remove variable description length
+
 # 2.2.1
 
 * Fix player being kicked on command usage
