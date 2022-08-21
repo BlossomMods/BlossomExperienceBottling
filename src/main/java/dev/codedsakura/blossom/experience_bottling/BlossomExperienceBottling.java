@@ -148,6 +148,12 @@ public class BlossomExperienceBottling implements ModInitializer {
     }
 
 
+    private void giveOrDropStack(ServerPlayerEntity player, ItemStack stack) {
+        if (!player.giveItemStack(stack)) {
+            player.dropItem(stack, false);
+        }
+    }
+
     private void storePointsIncremental(CommandContext<ServerCommandSource> ctx, int totalPoints, int increment) throws CommandSyntaxException {
         ServerPlayerEntity player = ctx.getSource().getPlayerOrThrow();
 
@@ -186,10 +192,10 @@ public class BlossomExperienceBottling implements ModInitializer {
         int leftover = totalPoints % increment;
 
         consumeItems(player, count + (leftover > 0 ? 1 : 0));
-        player.giveItemStack(create(increment, count));
+        giveOrDropStack(player, create(increment, count));
 
         if (leftover > 0) {
-            player.giveItemStack(create(leftover));
+            giveOrDropStack(player, create(leftover));
         }
 
         player.addExperience(-totalPoints);

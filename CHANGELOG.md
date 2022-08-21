@@ -1,6 +1,7 @@
 # 2.2.3
 
 * Fix error when attempting to bottle with 0 xp
+* Fix bottled xp not dropping when inventory is full
 
 # 2.2.2
 
