@@ -17,9 +17,9 @@ public class BottledXpEntity extends ExperienceBottleEntity {
     }
 
     protected void onCollision(HitResult hitResult) {
-        if (this.world instanceof ServerWorld) {
-            this.world.syncWorldEvent(2002, this.getBlockPos(), PotionUtil.getColor(Potions.WATER));
-            ExperienceOrbEntity.spawn((ServerWorld) this.world, this.getPos(), this.xpAmount);
+        if (this.getWorld() instanceof ServerWorld) {
+            this.getWorld().syncWorldEvent(2002, this.getBlockPos(), PotionUtil.getColor(Potions.WATER));
+            ExperienceOrbEntity.spawn((ServerWorld) this.getWorld(), this.getPos(), this.xpAmount);
             this.discard();
         }
     }

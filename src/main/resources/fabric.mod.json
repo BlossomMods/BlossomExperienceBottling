@@ -24,7 +24,9 @@
   ],
   "depends": {
     "fabricloader": ">=0.14.3",
-    "minecraft": "1.19.x",
+    "minecraft": [
+      "${supported_versions}"
+    ],
     "blossom-lib": "^${blossomlib_version}"
   },
   "suggests": {

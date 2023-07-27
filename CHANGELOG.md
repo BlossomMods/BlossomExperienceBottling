@@ -1,3 +1,7 @@
+# 2.2.4
+
+* Fix mixin name for dispensing bottled xp
+
 # 2.2.3
 
 * Fix error when attempting to bottle with 0 xp

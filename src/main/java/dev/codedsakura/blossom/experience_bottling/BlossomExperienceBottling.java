@@ -13,16 +13,18 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.PlaySoundIdS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.core.Logger;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -68,17 +70,19 @@ public class BlossomExperienceBottling implements ModInitializer {
 
 
     public static void playSound(PlayerEntity player, @Nullable BlossomExperienceBottlingConfig.Sound sound) {
-        if (player.world.isClient) {
+        if (player.getWorld().isClient) {
             return;
         }
 
         if (sound != null) {
             if (player instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) player).networkHandler
-                        .sendPacket(new PlaySoundIdS2CPacket(
-                                Identifier.tryParse(sound.identifier),
+                        .sendPacket(new PlaySoundS2CPacket(
+                                RegistryEntry.of(SoundEvent.of(Identifier.tryParse(sound.identifier))),
                                 SoundCategory.PLAYERS,
-                                player.getPos(),
+                                player.getPos().x,
+                                player.getPos().y,
+                                player.getPos().z,
                                 sound.volume,
                                 sound.pitch,
                                 player.getWorld().getRandom().nextLong()
@@ -108,7 +112,7 @@ public class BlossomExperienceBottling implements ModInitializer {
                 .entrySet()
                 .stream()
                 .map(e -> new Pair<>(
-                        Registry.ITEM.get(Identifier.tryParse(e.getKey())),
+                        Registries.ITEM.get(Identifier.tryParse(e.getKey())),
                         e.getValue().stream().mapToInt(i -> i.count).sum()
                 ))
                 .filter(e -> !hasItems.containsKey(e.getLeft()) || hasItems.get(e.getLeft()) < e.getRight())
@@ -123,7 +127,7 @@ public class BlossomExperienceBottling implements ModInitializer {
         Stream.of(CONFIG.items.consumeItems)
                 .collect(Collectors.groupingBy(i -> i.identifier))
                 .forEach((identifier, itemList) -> {
-                    Item item = Registry.ITEM.get(Identifier.tryParse(identifier));
+                    Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
                     int count = itemList.stream().mapToInt(i -> i.count).sum() * multiplier;
                     player.getInventory().remove(
                             itemStack -> itemStack.getItem().equals(item),
@@ -141,7 +145,7 @@ public class BlossomExperienceBottling implements ModInitializer {
         Stream.of(CONFIG.items.returnItems)
                 .collect(Collectors.groupingBy(i -> i.identifier))
                 .forEach((identifier, itemList) -> {
-                    Item item = Registry.ITEM.get(Identifier.tryParse(identifier));
+                    Item item = Registries.ITEM.get(Identifier.tryParse(identifier));
                     int count = itemList.stream().mapToInt(i -> i.count).sum();
                     player.getInventory().insertStack(new ItemStack(item, count));
                 });

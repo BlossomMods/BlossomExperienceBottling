@@ -1,7 +1,7 @@
 package dev.codedsakura.blossom.experience_bottling;
 
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlossomExperienceBottlingConfig {
     ItemColors itemColors = new ItemColors();

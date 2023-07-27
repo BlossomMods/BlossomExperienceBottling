@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(targets = "net/minecraft/block/dispenser/DispenserBehavior$24")
 public class BlossomXpBottleDispenseMixin {
     @Inject(method = "createProjectile", at = @At("HEAD"), cancellable = true)
-    void BlossomExperienceBottling$aa(World world, Position position, ItemStack stack, CallbackInfoReturnable<ProjectileEntity> cir) {
+    void BlossomExperienceBottling$dispenseBottledXp(World world, Position position, ItemStack stack, CallbackInfoReturnable<ProjectileEntity> cir) {
         if (BottledXpUtils.isBottledXp(stack)) {
             int amount = BottledXpUtils.getBottledXpAmount(stack);
 
